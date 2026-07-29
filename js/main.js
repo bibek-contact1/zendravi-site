@@ -10,13 +10,15 @@ const products = [
     id: 'zendravi-1.0', name: 'Zendravi 1.0', tagline: 'Presence, refined.',
     description: 'Our debut fragrance—an unforgettable signature built on warm woods, deep amber, and a soft golden trail. Zendravi 1.0 is crafted for those who move with quiet confidence.',
     notes: { top: ['Bergamot', 'Saffron', 'Pink Pepper'], middle: ['Turkish Rose', 'Jasmine', 'Iris'], base: ['Oud', 'Amber', 'Sandalwood', 'Musk'] },
-    price: 1999, volume: '50ml', image: 'images/himurja%20product%201.jpeg', category: 'Signature', longevity: '8-10 hours', projection: 'Moderate', rating: 4.9, originalPrice: 1499
+    price: 1999, volume: '50ml', image: 'images/himurja%20product%201.jpeg', category: 'Signature', longevity: '8-10 hours', projection: 'Moderate', rating: 4.9, originalPrice: 1499,
+    url: 'https://zendravi.com/product-zendravi-1-0.html'
   },
   {
     id: 'coming-soon', name: 'Coming Soon', tagline: 'A new chapter is unfolding',
     description: 'Our next creation is in progress—more depth, more intrigue, and a new signature priced at Rs. 1,899. Stay connected for launch updates.',
     notes: { top: ['TBA'], middle: ['TBA'], base: ['TBA'] },
-    price: 1899, volume: '50ml', image: 'images/brand%20logo.jpeg', category: 'Launching Soon', longevity: 'TBA', projection: 'TBA', rating: 5
+    price: 1899, volume: '50ml', image: 'images/brand%20logo.jpeg', category: 'Launching Soon', longevity: 'TBA', projection: 'TBA', rating: 5,
+    url: 'https://zendravi.com/shop.html'
   }
 ];
 
@@ -39,6 +41,22 @@ const timelineEvents = [
 
 function formatINR(amount) {
   return 'Rs. ' + amount.toLocaleString('en-IN');
+}
+
+function buildEnquiryWhatsAppUrl(product) {
+  const price = product.id === 'zendravi-1.0' && product.originalPrice
+    ? formatINR(product.originalPrice)
+    : formatINR(product.price);
+  const imageUrl = /^https?:\/\//.test(product.image) ? product.image : `https://zendravi.com/${product.image}`;
+  const lines = [
+    `Hi Zendravi! I'd like to enquire about:`,
+    ``,
+    `*${product.name}* — ${product.tagline}`,
+    `Price: ${price} / ${product.volume}`,
+    `Product page: ${product.url}`,
+    `Image: ${imageUrl}`
+  ];
+  return 'https://wa.me/9779709744524?text=' + encodeURIComponent(lines.join('\n'));
 }
 
 function showToast(message) {
@@ -163,6 +181,9 @@ function openProductModal(id) {
     ? `${formatINR(product.originalPrice)} <span class="product-price-was">${formatINR(product.price)}</span>`
     : formatINR(product.price);
   document.getElementById('modalPrice').innerHTML = priceHtml;
+
+  const waLink = document.getElementById('modalWhatsApp');
+  if (waLink) waLink.href = buildEnquiryWhatsAppUrl(product);
 
   modal.hidden = false;
   document.body.classList.add('modal-open');

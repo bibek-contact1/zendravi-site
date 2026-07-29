@@ -154,6 +154,56 @@ function renderFeatured() {
   observeReveal(list.querySelectorAll('.reveal'));
 }
 
+// ===================== RELATED PRODUCTS =====================
+
+function renderRelatedProducts(currentId) {
+  const grid = document.getElementById('relatedProducts');
+  const section = document.getElementById('relatedSection');
+  if (!grid) return;
+
+  const related = products.filter(p => p.id !== currentId);
+  if (!related.length) {
+    if (section) section.hidden = true;
+    return;
+  }
+
+  grid.innerHTML = related.map((product, i) => {
+    const totalNotes = product.notes.top.length + product.notes.middle.length + product.notes.base.length;
+    const noteTags = product.notes.top.slice(0, 2).map(n => `<span class="product-note-tag">${n}</span>`).join('');
+    const displayPrice = product.id === 'zendravi-1.0' && product.originalPrice
+      ? `${formatINR(product.originalPrice)} <span class="product-price-was">${formatINR(product.price)}</span><span class="product-volume">/ ${product.volume}</span>`
+      : `${formatINR(product.price)}<span class="product-volume">/ ${product.volume}</span>`;
+    const detailHref = product.url && product.url.includes('product-') ? product.url.replace('https://zendravi.com/', '') : null;
+
+    return `
+      <div class="product-card reveal" data-delay="${(i * 0.1).toFixed(2)}" data-product-id="${product.id}">
+        <div class="product-image">
+          <img src="${product.image}" alt="${product.name}" loading="lazy" />
+          <div class="product-overlay"></div>
+          <span class="product-category">${product.category}</span>
+          ${detailHref
+            ? `<a href="${detailHref}" class="product-view-btn">View Full Details</a>`
+            : `<button class="product-view-btn" type="button" data-view="${product.id}">View Details</button>`}
+        </div>
+        <div class="product-info">
+          <h3 class="product-name">${product.name}</h3>
+          <p class="product-tagline">${product.tagline}</p>
+          <div class="product-notes">
+            ${noteTags}
+            <span class="product-note-more">+${totalNotes - 2} notes</span>
+          </div>
+          <div class="product-footer">
+            <span class="product-price">${displayPrice}</span>
+            <div class="product-rating"><span class="star">★</span><span class="value">${product.rating}</span></div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  observeReveal(grid.querySelectorAll('.reveal'));
+}
+
 // ===================== PRODUCT MODAL =====================
 
 function openProductModal(id) {
@@ -462,6 +512,7 @@ document.addEventListener('DOMContentLoaded', () => {
   splitHeroTitle();
   renderProducts();
   renderFeatured();
+  if (document.body.dataset.productId) renderRelatedProducts(document.body.dataset.productId);
   renderTestimonial(0);
   restartTestimonialTimer();
   renderTimeline();

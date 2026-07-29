@@ -86,16 +86,6 @@ function renderProducts() {
     `;
   }).join('');
 
-  grid.querySelectorAll('[data-view]').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      openProductModal(btn.dataset.view);
-    });
-  });
-  grid.querySelectorAll('.product-card').forEach(card => {
-    card.addEventListener('click', () => openProductModal(card.dataset.productId));
-  });
-
   observeReveal(grid.querySelectorAll('.reveal'));
 }
 
@@ -143,10 +133,6 @@ function renderFeatured() {
     `;
   }).join('');
 
-  list.querySelectorAll('[data-view]').forEach(btn => {
-    btn.addEventListener('click', () => openProductModal(btn.dataset.view));
-  });
-
   observeReveal(list.querySelectorAll('.reveal'));
 }
 
@@ -191,7 +177,13 @@ function closeProductModal() {
 }
 
 document.addEventListener('click', (e) => {
-  if (e.target.closest('[data-close-modal]')) closeProductModal();
+  if (e.target.closest('[data-close-modal]')) { closeProductModal(); return; }
+
+  const viewBtn = e.target.closest('[data-view]');
+  if (viewBtn) { e.stopPropagation(); openProductModal(viewBtn.dataset.view); return; }
+
+  const card = e.target.closest('.product-card[data-product-id]');
+  if (card) openProductModal(card.dataset.productId);
 });
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') closeProductModal();
@@ -213,9 +205,11 @@ let currentTestimonial = 0;
 let testimonialTimer = null;
 
 function renderTestimonial(index) {
+  const textEl = document.getElementById('testimonialText');
+  if (!textEl) return;
   const t = testimonials[index];
   const slide = document.getElementById('testimonialSlide');
-  document.getElementById('testimonialText').textContent = t.quote;
+  textEl.textContent = t.quote;
   document.getElementById('testimonialName').textContent = t.name;
   document.getElementById('testimonialTitle').textContent = t.title;
 
@@ -450,8 +444,7 @@ document.addEventListener('DOMContentLoaded', () => {
   renderTestimonial(0);
   restartTestimonialTimer();
   renderTimeline();
-  observeReveal(document.querySelectorAll('.reveal:not([data-delay])'));
-  observeReveal(document.querySelectorAll('.section-header.reveal, .split-image.reveal, .split-content.reveal, .newsletter-inner.reveal'));
+  observeReveal(document.querySelectorAll('.reveal'));
   initMagneticButtons();
   setFooterYear();
   onScroll();

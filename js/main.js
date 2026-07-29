@@ -10,11 +10,11 @@ const products = [
     id: 'zendravi-1.0', name: 'Zendravi 1.0', tagline: 'Presence, refined.',
     description: 'Our debut fragrance—an unforgettable signature built on warm woods, deep amber, and a soft golden trail. Zendravi 1.0 is crafted for those who move with quiet confidence.',
     notes: { top: ['Bergamot', 'Saffron', 'Pink Pepper'], middle: ['Turkish Rose', 'Jasmine', 'Iris'], base: ['Oud', 'Amber', 'Sandalwood', 'Musk'] },
-    price: 1999, volume: '50ml', image: 'images/zendravi%201.0.jpeg', category: 'Signature', longevity: '8-10 hours', projection: 'Moderate', rating: 4.9, originalPrice: 1499
+    price: 1999, volume: '50ml', image: 'images/himurja%20product%201.jpeg', category: 'Signature', longevity: '8-10 hours', projection: 'Moderate', rating: 4.9, originalPrice: 1499
   },
   {
     id: 'coming-soon', name: 'Coming Soon', tagline: 'A new chapter is unfolding',
-    description: 'Our next creation is in progress—more depth, more intrigue, and a new signature priced at ₹1,899. Stay connected for launch updates.',
+    description: 'Our next creation is in progress—more depth, more intrigue, and a new signature priced at Rs. 1,899. Stay connected for launch updates.',
     notes: { top: ['TBA'], middle: ['TBA'], base: ['TBA'] },
     price: 1899, volume: '50ml', image: 'images/brand%20logo.jpeg', category: 'Launching Soon', longevity: 'TBA', projection: 'TBA', rating: 5
   }
@@ -32,13 +32,13 @@ const testimonials = [
 const timelineEvents = [
   { year: '2025', title: 'Brand Registered', description: 'Zendravi was officially registered in July 2025, marking the beginning of our journey to redefine luxury presence.' },
   { year: '2025', title: 'Launch Fragrance', description: 'We launched Zendravi 1.0—our debut Eau de Parfum—with an exclusive introductory price for our first community.' },
-  { year: '2025', title: 'Coming Soon', description: 'Our second fragrance is in development and will be released soon at ₹1,899.' }
+  { year: '2025', title: 'Coming Soon', description: 'Our second fragrance is in development and will be released soon at Rs. 1,899.' }
 ];
 
 // ===================== HELPERS =====================
 
 function formatINR(amount) {
-  return '₹' + amount;
+  return 'Rs. ' + amount.toLocaleString('en-IN');
 }
 
 function showToast(message) {

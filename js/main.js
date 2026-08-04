@@ -250,11 +250,17 @@ function closeProductModal() {
 document.addEventListener('click', (e) => {
   if (e.target.closest('[data-close-modal]')) { closeProductModal(); return; }
 
+  if (e.target.closest('.product-view-btn[href]')) return;
+
   const viewBtn = e.target.closest('[data-view]');
   if (viewBtn) { e.stopPropagation(); openProductModal(viewBtn.dataset.view); return; }
 
   const card = e.target.closest('.product-card[data-product-id]');
-  if (card) openProductModal(card.dataset.productId);
+  if (card) {
+    const link = card.querySelector('.product-view-btn[href]');
+    if (link) { window.location.href = link.getAttribute('href'); return; }
+    openProductModal(card.dataset.productId);
+  }
 });
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape') closeProductModal();
